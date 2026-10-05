@@ -3,10 +3,20 @@ name: Terraform Pipeline
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Choose Terraform Action'
+        required: true
+        default: 'apply'
+        type: choice
+        options:
+          - apply
+          - destroy
 
 permissions:
-  id-token: write # Required for requesting the JWT OIDC token
-  contents: read
+  id-token: write  # Required for OIDC authentication
+  contents: read   # Required to read repository contents
 
 jobs:
   terraform:
@@ -19,7 +29,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::533613205608:role/github-actions-terraform-role
-          aws-region: us-east-1
+          aws-region: us-east-1  # Replace with your target AWS region (e.g., ap-southeast-2)
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -27,5 +37,8 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
+      - name: Terraform Execution
+        run: |
+          ACTION="${{ github.event.inputs.action || 'apply' }}"
+          echo "Executing terraform $ACTION..."
+          terraform $ACTION -auto-approve
