@@ -17,10 +17,10 @@ data "aws_caller_identity" "current" {}
 
 # Bucket names are globally unique, so we include your account ID
 resource "aws_s3_bucket" "tf_state" {
-  bucket = "tfstate-${data.aws_caller_identity.current.account_id}-ap-southeast-2"
+  bucket = "tfstate-${data.aws_caller_identity.current.account_id}-us-east-1"
 
   lifecycle {
-    prevent_destroy = true # protects against accidental deletion
+   // prevent_destroy = true # protects against accidental deletion
   }
 }
 
