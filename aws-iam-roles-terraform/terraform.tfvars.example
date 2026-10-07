@@ -1,0 +1,4 @@
+# Optional. Copy to terraform.tfvars to override defaults.
+# aws_region             = "us-east-1"
+# require_mfa            = true
+# trusted_principal_arns = ["arn:aws:iam::123456789012:user/your-admin-user"]
